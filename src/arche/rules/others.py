@@ -1,10 +1,11 @@
 import codecs
 import re
+from typing import Set
 
 from arche.rules.result import Outcome, Result
 import numpy as np
 import pandas as pd
-from tqdm import tqdm_notebook
+from tqdm.notebook import tqdm
 
 
 def compare_boolean_fields(
@@ -90,12 +91,10 @@ def garbage_symbols(df: pd.DataFrame) -> Result:
     )
 
     errors = {}
-    row_keys = set()
+    row_keys: Set = set()
     rule_result = Result("Garbage Symbols", items_count=len(df))
 
-    for column in tqdm_notebook(
-        df.select_dtypes([np.object]).columns, desc="Garbage Symbols"
-    ):
+    for column in tqdm(df.select_dtypes([np.object]).columns, desc="Garbage Symbols"):
         matches = df[column].apply(str).str.extractall(garbage, flags=re.IGNORECASE)
         if not matches.empty:
             error_keys = df.loc[matches.unstack().index.values].index

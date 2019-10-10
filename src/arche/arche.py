@@ -1,12 +1,13 @@
 from functools import lru_cache
 import logging
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Union, cast
 
 from arche.data_quality_report import DataQualityReport
 from arche.readers.items import Items, CollectionItems, JobItems, RawItems
 from arche.readers.schema import Schema, SchemaSource
 from arche.report import Report
 import arche.rules.category as category_rules
+import arche.rules.compare as compare
 import arche.rules.coverage as coverage_rules
 import arche.rules.duplicates as duplicate_rules
 import arche.rules.json_schema as schema_rules
@@ -106,15 +107,15 @@ class Arche:
     def get_items(
         source: Union[str, pd.DataFrame, RawItems],
         count: Optional[int],
-        start: Union[str, int],
+        start: Optional[str],
         filters: Optional[api.Filters],
     ) -> Items:
         if isinstance(source, pd.DataFrame):
             return Items.from_df(source)
         elif isinstance(source, Iterable) and not isinstance(source, str):
-            return Items.from_array(source)
+            return Items.from_array(cast(RawItems, source))
         elif helpers.is_job_key(source):
-            return JobItems(source, count, start or 0, filters)
+            return JobItems(source, count, int(start or 0), filters)
         elif helpers.is_collection_key(source):
             return CollectionItems(source, count, start, filters)
         else:
@@ -138,7 +139,7 @@ class Arche:
         self.run_schema_rules()
 
     def data_quality_report(self, bucket: Optional[str] = None):
-        if helpers.is_collection_key(self.source):
+        if helpers.is_collection_key(str(self.source)):
             raise ValueError("Collections are not supported")
         if not self.schema:
             raise ValueError("Schema is empty")
@@ -254,3 +255,11 @@ class Arche:
             price_rules.compare_prices_for_same_names,
         ]:
             self.save_result(r(source_items.df, target_items.df, tagged_fields))
+        self.save_result(
+            compare.tagged_fields(
+                source_items.df,
+                target_items.df,
+                tagged_fields,
+                ["product_url_field", "name_field"],
+            )
+        )

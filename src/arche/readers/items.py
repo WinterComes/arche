@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from scrapinghub import ScrapinghubClient
 from scrapinghub.client.jobs import Job
-from tqdm import tqdm_notebook
+from tqdm.notebook import tqdm
 
 RawItems = Iterable[Dict[str, Any]]
 
@@ -33,20 +33,13 @@ class Items:
         """Cast columns with repeating values to `category` type to save memory"""
         if len(df) < 100:
             return
-        for c in tqdm_notebook(df.columns, desc="Categorizing"):
+        for c in tqdm(df.columns, desc="Categorizing"):
             try:
                 if df[c].nunique(dropna=False) <= 10:
                     df[c] = df[c].astype("category")
             # ignore lists and dicts columns
             except TypeError:
                 continue
-
-    def origin_column_name(self, new: str) -> str:
-        if new in self.df.columns:
-            return new
-        for column in self.df.columns:
-            if column in new:
-                return column
 
     @classmethod
     def from_df(cls, df: pd.DataFrame):
@@ -66,7 +59,7 @@ class CloudItems(Items):
     ):
         self.key = key
         self._count = count
-        self._limit = None
+        self._limit: int = 0
         self.filters = filters
         raw = self.fetch_data()
         df = pd.DataFrame(list(raw))
@@ -104,7 +97,7 @@ class JobItems(CloudItems):
         filters: Optional[api.Filters] = None,
     ):
         self.start_index = start_index
-        self.start: int = f"{key}/{start_index}"
+        self.start: str = f"{key}/{start_index}"
         self._job: Job = None
         super().__init__(key, count, filters)
 

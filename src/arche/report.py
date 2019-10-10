@@ -1,4 +1,6 @@
 from typing import Dict
+from functools import partial
+from typing import Dict, Union
 
 
 from arche import SH_URL
@@ -7,7 +9,7 @@ from arche.rules.result import Result, Outcome
 
 from bleach import linkify, callbacks
 from IPython.display import display_html
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, select_autoescape
 import numpy as np
 import pandas as pd
 
@@ -17,7 +19,7 @@ class Report:
         self.results: Dict[str, Result] = {}
 
         self.env = Environment(
-            loader=FileSystemLoader("arche/templates/"),
+            loader=PackageLoader("arche", "templates"),
             autoescape=select_autoescape(["html"]),
         )
         self.env.filters["linkify"] = linkify

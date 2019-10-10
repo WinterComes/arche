@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 import numpy as np
 from scrapinghub import ScrapinghubClient
 from scrapinghub.client.jobs import Job
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm, notebook
 
 
 Filters = List[Tuple[str, str, str]]
@@ -144,7 +144,10 @@ def get_items_with_pool(
         A numpy array of items
     """
     active_connections_limit = 10
-    processes_count = min(max(helpers.cpus_count(), workers), active_connections_limit)
+    processes_count: int = min(
+        max(helpers.cpus_count() or 0, workers), active_connections_limit
+    )
+
     batch_size = math.ceil(count / processes_count)
 
     start_idxs = range(start_index, start_index + count, batch_size)
@@ -163,7 +166,7 @@ def get_items(
     start_index: int,
     start: Optional[str],
     filters: Optional[Filters] = None,
-    p_bar: Union[tqdm, tqdm_notebook] = tqdm_notebook,
+    p_bar: Union[tqdm, notebook.tqdm] = notebook.tqdm,
     desc: Optional[str] = None,
 ) -> np.ndarray:
     source = get_source(key)
