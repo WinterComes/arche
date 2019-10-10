@@ -42,6 +42,7 @@ class Report:
     def __call__(self, rule: Result = None) -> None:
 
         for f in self.results.values():
+            # the plots aren't displayed without this
             f.figures
 
         if not rule:

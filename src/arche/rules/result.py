@@ -191,8 +191,6 @@ class Result:
         report = Report()
         IPython.display.clear_output()
         report.save(self)
-        for f in self.figures:
-            f.show()
         report(self)
 
     @staticmethod
