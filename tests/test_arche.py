@@ -124,7 +124,7 @@ def test_arche_dataframe(mocker):
         schema={"properties": {"c": {"type": "integer"}}},
         target=pd.DataFrame({"c": [1, 1]}),
     )
-    mocker.patch("arche.report.Report.write_details", autospec=True)
+    mocker.patch("arche.report.Report", autospec=True)
     a.report_all()
     executed = [
         "Garbage Symbols",
