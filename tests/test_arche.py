@@ -160,10 +160,9 @@ def test_arche_dataframe_data_warning(caplog):
 
 
 def test_report_all(mocker, get_cloud_items):
-    mocked_write_summaries = mocker.patch(
-        "arche.report.Report.write_summaries", autospec=True
+    mocked_display = mocker.patch(
+        "arche.report.Report", autospec=True
     )
-    mocked_write = mocker.patch("arche.report.Report.write", autospec=True)
 
     source = pd.DataFrame(get_cloud_items)
     source["b"] = True
@@ -176,8 +175,6 @@ def test_report_all(mocker, get_cloud_items):
         "Boolean Fields",
         "Categories",
     }
-    mocked_write_summaries.assert_called_once_with(a.report)
-    mocked_write.assert_called_once_with("\n" * 2)
     assert executed == a.report.results.keys()
 
 
