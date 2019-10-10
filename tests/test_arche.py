@@ -160,9 +160,7 @@ def test_arche_dataframe_data_warning(caplog):
 
 
 def test_report_all(mocker, get_cloud_items):
-    mocked_display = mocker.patch(
-        "arche.report.Report", autospec=True
-    )
+    mocked_display = mocker.patch("arche.report.Report", autospec=True)
 
     source = pd.DataFrame(get_cloud_items)
     source["b"] = True
@@ -176,6 +174,7 @@ def test_report_all(mocker, get_cloud_items):
         "Categories",
     }
     assert executed == a.report.results.keys()
+    mocked_display.assert_called_once()
 
 
 def test_run_all_rules_job(mocker, get_cloud_items):
@@ -222,19 +221,19 @@ def test_run_all_rules_collection(mocker, get_collection_items):
 
 def test_validate_with_json_schema(mocker, get_job_items, get_schema):
     res = create_result("JSON Schema Validation", {})
-    mocked_show = mocker.patch("arche.rules.result.Result.show", autospec=True)
+    mocked_display = mocker.patch("arche.report.Report", autospec=True)
 
     a = Arche("source", schema=get_schema)
     a._source_items = get_job_items
     a.validate_with_json_schema()
 
-    mocked_show.assert_called_once_with(res)
+    mocked_display.assert_called_once()
     assert len(a.report.results) == 1
     assert a.report.results.get("JSON Schema Validation") == res
 
 
 def test_validate_with_json_schema_fails(mocker, get_job_items, get_schema):
-    mocked_md = mocker.patch("arche.report.display_markdown", autospec=True)
+    mocked_md = mocker.patch("arche.report.Report", autospec=True)
     url = f"{SH_URL}/112358/13/21/item/1"
     res = create_result(
         "JSON Schema Validation",

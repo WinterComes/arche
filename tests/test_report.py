@@ -38,17 +38,18 @@ import pytest
     ],
 )
 def test_write_details(mocker, get_df, capsys, messages, expected_details):
-    mock_pio_show = mocker.patch("plotly.io.show", autospec=True)
-    md_mock = mocker.patch("arche.report.display_markdown", autospec=True)
+    mock_figures = mocker.patch(
+        "plotly.graph_objects.FigureWidget.to_html", autospec=True
+    )
+    mock_display = mocker.patch("arche.report.Report", autospec=True)
 
     r = Report()
     for m in messages:
         result = create_result(*m, stats=[get_df])
         r.save(result)
-    r.write_details()
-    mock_pio_show.assert_called_with(result.figures[0])
-    calls = [mocker.call(e) for e in expected_details]
-    md_mock.assert_has_calls(calls, any_order=True)
+    r()
+    mock_display.assert_called_once()
+    mock_figures.assert_called_with(result.figures[0])
 
 
 @pytest.mark.parametrize(
