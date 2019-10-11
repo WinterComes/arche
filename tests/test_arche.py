@@ -254,7 +254,7 @@ def test_validate_with_json_schema_fails(mocker, get_job_items, get_schema):
 
     assert len(a.report.results) == 1
     assert a.report.results.get("JSON Schema Validation") == res
-    assert("JSON Schema Validation - FAILED" in mocked_display.mock_calls[0][1][0])
+    assert "JSON Schema Validation - FAILED" in mocked_display.mock_calls[0][1][0]
 
 
 @pytest.mark.parametrize(

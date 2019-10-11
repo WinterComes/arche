@@ -30,7 +30,7 @@ import pytest
                 "<br>",
                 "<h2>Plots</h2>",
             ],
-        ),
+        )
     ],
 )
 def test_display(mocker, get_df, capsys, messages, expected_details):
@@ -43,9 +43,9 @@ def test_display(mocker, get_df, capsys, messages, expected_details):
     r()
 
     generated_html = mocked_display.mock_calls[0][1][0]
-    assert(generated_html.count("Plotly.newPlot") == 2)
-    assert(generated_html.count("rule name here - SKIPPED") == 2)
-    assert(generated_html.count("other result there - SKIPPED") == 2)
+    assert generated_html.count("Plotly.newPlot") == 2
+    assert generated_html.count("rule name here - SKIPPED") == 2
+    assert generated_html.count("other result there - SKIPPED") == 2
 
 
 @pytest.mark.parametrize(
@@ -58,7 +58,7 @@ def test_write_rule_details(mocker, get_df, capsys, message, expected_details):
     r = Report()
     r(outcome)
     generated_html = mocked_display.mock_calls[0][1][0]
-    assert(generated_html.count("very detailed message") == 1)
+    assert generated_html.count("very detailed message") == 1
 
 
 @pytest.mark.parametrize(
