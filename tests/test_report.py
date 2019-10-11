@@ -31,25 +31,21 @@ import pytest
                 "<h2>Plots</h2>",
             ],
         ),
-        (
-            [("everything is fine", {Level.INFO: [("summary",)]})],
-            ["<h2>Details</h2>", "<h2>Plots</h2>"],
-        ),
     ],
 )
-def test_write_details(mocker, get_df, capsys, messages, expected_details):
-    mock_figures = mocker.patch(
-        "plotly.graph_objects.FigureWidget.to_html", autospec=True
-    )
-    mock_display = mocker.patch("arche.report.Report", autospec=True)
+def test_display(mocker, get_df, capsys, messages, expected_details):
+    mocked_display = mocker.patch("arche.report.display_html", autospec=True)
 
     r = Report()
     for m in messages:
         result = create_result(*m, stats=[get_df])
         r.save(result)
     r()
-    mock_display.assert_called_once()
-    mock_figures.assert_called_with(result.figures[0])
+
+    generated_html = mocked_display.mock_calls[0][1][0]
+    assert(generated_html.count("Plotly.newPlot") == 2)
+    assert(generated_html.count("rule name here - SKIPPED") == 2)
+    assert(generated_html.count("other result there - SKIPPED") == 2)
 
 
 @pytest.mark.parametrize(
