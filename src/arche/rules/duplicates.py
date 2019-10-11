@@ -6,12 +6,12 @@ from arche.rules.result import Result, Outcome
 import pandas as pd
 
 
-def find_by(df: pd.DataFrame, subsets: List[Union[str, List[str]]]) -> Result:
-    """Find equal items rows in `df` by `subsets`. I.e. if two items have the same
-    subset's element value, they are considered duplicates.
+def find_by(df: pd.DataFrame, uniques: List[Union[str, List[str]]]) -> Result:
+    """Find equal items rows in `df` by `uniques`. I.e. if two items have the same
+    uniques's element value, they are considered duplicates.
 
     Args:
-        subsets: list containing columns and list of columns to identify duplicates.
+        uniques: list containing columns and list of columns to identify duplicates.
         List of columns means that all list columns values should be equal.
 
     Returns:
@@ -20,8 +20,8 @@ def find_by(df: pd.DataFrame, subsets: List[Union[str, List[str]]]) -> Result:
     result = Result("Duplicates")
     result.items_count = len(df)
 
-    df = df.dropna(subset=list(set(flatten(subsets))), how="all")
-    for columns in subsets:
+    df = df.dropna(subset=list(set(flatten(uniques))), how="all")
+    for columns in uniques:
         mask = columns if isinstance(columns, list) else [columns]
         duplicates = df[df.duplicated(columns, keep=False)][mask]
         if duplicates.empty:
