@@ -177,7 +177,11 @@
 
   {% macro render_items_urls(urls, limit=10) %}
      {% for i in range(0, (urls|length) if (urls|length) < limit else limit) %}
-        <a href="{{ urls[i] }}" target="_blank"> {{urls[i].split('/')[-1] }} </a> &nbsp;
+	{% if urls[i] is string %}
+	   <a href="{{ urls[i] }}" target="_blank"> {{ urls[i].split('/')[-1] }} </a> &nbsp;
+	{% else %}
+	   <a href="{{ urls[i] }}" target="_blank"> {{ urls[i] }} </a> &nbsp;
+	{% endif %}
      {% endfor %}
          
   {% endmacro %}
