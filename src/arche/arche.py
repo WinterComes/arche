@@ -124,10 +124,10 @@ class Arche:
     def save_result(self, rule_result):
         self.report.save(rule_result)
 
-    def report_all(self) -> None:
+    def report_all(self, short: bool = False) -> None:
         self.run_all_rules()
         IPython.display.clear_output()
-        self.report()
+        self.report(keys_limit=10 if short else None)
 
     def run_all_rules(self):
         if isinstance(self.source_items, JobItems):

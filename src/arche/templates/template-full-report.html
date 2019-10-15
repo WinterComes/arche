@@ -7,7 +7,7 @@
     <label for="tab-rules" class="tab-label">Rules Outcome</label>
     <div class="tab-content">
       {% for rule in rules %}
-      {{ render_rule(rule) }}
+         {{ render_rule(rule, keys_limit) }}
       {% endfor %}
     </div>
   </div>
@@ -17,7 +17,7 @@
     <label for="tab-plots" class="tab-label">Plots</label>
     <div class="tab-content">
       {% for rule in rules %}
-      {{ render_figure(rule) }}
+         {{ render_figure(rule) }}
       {% endfor %}
     </div>
   </div>

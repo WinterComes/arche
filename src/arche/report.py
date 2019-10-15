@@ -16,24 +16,29 @@ class Report:
         self.env = Environment(
             loader=PackageLoader("arche", "templates"),
             autoescape=select_autoescape(["html"]),
+            extensions=["jinja2.ext.loopcontrols"],
         )
         self.env.filters["linkify"] = linkify
 
     def save(self, result: Result) -> None:
         self.results[result.name] = result
 
-    def __call__(self, rule: Result = None) -> None:
+    def __call__(self, rule: Result = None, keys_limit: int = None) -> None:
         if not rule:
             template = self.env.get_template("template-full-report.html")
             resultHTML = template.render(
                 rules=sorted(self.results.values(), key=lambda x: x.outcome.value),
                 pd=pd,
                 linkfy_callbacks=[callbacks.target_blank],
+                keys_limit=keys_limit,
             )
         else:
             template = self.env.get_template("template-single-rule.html")
             resultHTML = template.render(
-                rule=rule, pd=pd, linkfy_callbacks=[callbacks.target_blank]
+                rule=rule,
+                pd=pd,
+                linkfy_callbacks=[callbacks.target_blank],
+                keys_limit=keys_limit,
             )
         display_html(resultHTML, raw=True, metadata={"isolated": True})
 
