@@ -1,4 +1,4 @@
-from arche.rules.result import Level, Message, Result
+from arche.rules.result import Level, Message, Result, Outcome
 from conftest import create_named_df, create_result
 import pandas as pd
 import pytest
@@ -80,3 +80,12 @@ def test_show(mocker, capsys, message, stats):
     res.show()
     generated_html = mocked_display.mock_calls[0][1][0]
     assert generated_html.count("Plotly.newPlot") == 1
+
+
+def test_outcome_equality():
+    outcomes = [Outcome.SKIPPED, Outcome.PASSED, Outcome.FAILED, Outcome.WARNING]
+
+    for outcome in outcomes:
+        assert outcome.__eq__(outcome)
+        for other in filter(lambda x: x != outcome, outcomes):
+            assert outcome.__ne__(other)
