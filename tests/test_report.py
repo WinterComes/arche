@@ -134,7 +134,7 @@ def test__order_rules(get_job_items):
         assert (
             result.outcome
             in results_expected_order[
-                results_expected_order.index(actual_outcome) + 1:
+                results_expected_order.index(actual_outcome) + 1 :
             ]
         )
         actual_outcome = result.outcome

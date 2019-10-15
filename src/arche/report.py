@@ -38,7 +38,7 @@ class Report:
 
         for f in self.results.values():
             # the plots aren't displayed without this
-            f.figures
+            f.figures  # noqa
 
         if not rule:
             template = self.env.get_template("template-full-report.html")
