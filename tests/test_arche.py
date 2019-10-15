@@ -174,7 +174,7 @@ def test_report_all(mocker, get_cloud_items):
         "Categories",
     }
     assert executed == a.report.results.keys()
-    mocked_call.assert_called_once()
+    mocked_call.assert_called_once_with(a.report, keys_limit=None)
 
 
 def test_run_all_rules_job(mocker, get_cloud_items):
@@ -227,7 +227,7 @@ def test_validate_with_json_schema(mocker, get_job_items, get_schema):
     a._source_items = get_job_items
     a.validate_with_json_schema()
 
-    mocked_call.assert_called_once()
+    mocked_call.assert_called_once_with(a.report, res)
     assert len(a.report.results) == 1
     assert a.report.results.get("JSON Schema Validation") == res
 
