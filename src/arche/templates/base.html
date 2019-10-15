@@ -129,10 +129,10 @@
     {% endmacro %}
 
     {% macro render_figure(rule) %}
-      {% if rule._figures %}
+      {% if rule.figures %}
       <details open>
         <summary class="{{rule.outcome.name}}"> {{ rule.name }} - {{ rule.outcome.name }}</summary>
-           {% for figure in rule._figures %}
+           {% for figure in rule.figures %}
               {{ figure.to_html() | safe }}
            {% endfor %}
        </details>

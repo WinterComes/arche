@@ -36,10 +36,6 @@ class Report:
 
     def __call__(self, rule: Result = None) -> None:
 
-        for f in self.results.values():
-            # the plots aren't displayed without this
-            f.figures  # noqa
-
         if not rule:
             template = self.env.get_template("template-full-report.html")
             resultHTML = template.render(
