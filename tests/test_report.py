@@ -34,7 +34,7 @@ import pytest
         )
     ],
 )
-def test_display(mocker, get_df, capsys, messages, expected_details):
+def test_report_call(mocker, get_df, capsys, messages, expected_details):
     mocked_display = mocker.patch("arche.report.display_html", autospec=True)
 
     r = Report()
@@ -49,20 +49,18 @@ def test_display(mocker, get_df, capsys, messages, expected_details):
     assert generated_html.count("other result there - SKIPPED") == 2
 
 
-@pytest.mark.parametrize(
-    "message, expected_details",
-    [({Level.INFO: [("summary", "very detailed message")]}, "very detailed message")],
-)
-def test_write_rule_details(mocker, get_df, capsys, message, expected_details):
+def test_report_call_arguments(mocker):
+    message = {Level.INFO: [("summary", "very detailed message")]}
+
     mocked_display = mocker.patch("arche.report.display_html", autospec=True)
     outcome = create_result("rule name here", message)
-    r = Report()
-    r(outcome)
+
+    Report()(outcome)
     generated_html = mocked_display.mock_calls[0][1][0]
     assert generated_html.count("very detailed message") == 1
 
 
-def test_display_errors(mocker, get_job_items, get_schema):
+def test_report_call_with_errors(mocker, get_job_items, get_schema):
     mocked_display = mocker.patch("arche.report.display_html", autospec=True)
     url = f"{SH_URL}/112358/13/21/item/1"
     schema = {"type": "object", "required": ["price"], "properties": {"price": {}}}
