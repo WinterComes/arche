@@ -2,7 +2,6 @@
 
 {% block report %}
 <div>
-  {{ render_rule(rule) }}
-  {{ render_figure(rule) }}
+   {{ render_rule(rule, render_figure=True) }}
 </div>
 {% endblock %}

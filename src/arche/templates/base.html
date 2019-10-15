@@ -139,14 +139,17 @@
      {% endif %}
     {% endmacro %}
       
-    {% macro render_rule(rule) %}
+    {% macro render_rule(rule, render_figure=False) %}
       <details open>
         <summary class="{{rule.outcome.name}}">{{ rule.name }} - {{ rule.outcome.name }}</summary>
           {% for outcome, messages in rule.messages.items() %}
              {{ render_messages(outcome, messages) }}
           {% endfor %}
-        
-        
+	  {% if render_figure %}
+              {% for figure in rule.figures %}
+                 {{ figure.to_html() | safe }}
+              {% endfor %}
+          {% endif %}
       </details>
     {% endmacro %}
 
