@@ -22,10 +22,10 @@ class Level(Enum):
 
 
 class Outcome(Enum):
-    SKIPPED = 0
-    PASSED = 1
-    FAILED = 2
-    WARNING = 3
+    PASSED = 0
+    FAILED = 1
+    WARNING = 2
+    SKIPPED = 3
 
     def __eq__(self, other):
         if isinstance(other, Outcome):
@@ -94,9 +94,6 @@ class Result:
 
     @property
     def outcome(self) -> Outcome:
-        """
-        Returns the outcome status of a given rule
-        """
         if not self.messages:
             return Outcome.PASSED
         message_level = self.messages.keys()

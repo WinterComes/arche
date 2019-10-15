@@ -22,24 +22,11 @@ class Report:
     def save(self, result: Result) -> None:
         self.results[result.name] = result
 
-    @staticmethod
-    def _order_rules(rules):
-        """
-        Returns an ordered list of Results
-        """
-        RULE_ORDER = [Outcome.PASSED, Outcome.FAILED, Outcome.WARNING, Outcome.SKIPPED]
-        rules = sorted(
-            [(RULE_ORDER.index(rule.outcome), rule) for rule in rules],
-            key=lambda x: x[0],
-        )
-        return [rule[1] for rule in rules]
-
     def __call__(self, rule: Result = None) -> None:
-
         if not rule:
             template = self.env.get_template("template-full-report.html")
             resultHTML = template.render(
-                rules=list(Report._order_rules(self.results.values())),
+                rules=sorted(self.results.values(), key=lambda x: x.outcome.value),
                 pd=pd,
                 linkfy_callbacks=[callbacks.target_blank],
             )

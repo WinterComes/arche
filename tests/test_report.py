@@ -110,31 +110,3 @@ def test_save():
     dummy_result = create_result("dummy", {Level.INFO: [("outcome",)]})
     r.save(dummy_result)
     assert r.results == {dummy_result.name: dummy_result}
-
-
-def test__order_rules(get_job_items):
-    schema = {"type": "object", "required": ["price"], "properties": {"price": {}}}
-    g = Arche("source", schema=schema)
-    g._source_items = get_job_items
-    g.report_all()
-    results = g.report.results.values()
-
-    ordered_results = Report._order_rules(results)
-    actual_outcome = Outcome.PASSED
-    results_expected_order = [
-        Outcome.PASSED,
-        Outcome.FAILED,
-        Outcome.WARNING,
-        Outcome.SKIPPED,
-    ]
-    for result in ordered_results:
-        if result.outcome == actual_outcome:
-            continue
-
-        assert (
-            result.outcome
-            in results_expected_order[
-                results_expected_order.index(actual_outcome) + 1 :
-            ]
-        )
-        actual_outcome = result.outcome
