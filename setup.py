@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
-setup(packages=find_packages(), package_data={"templates": ["arche/templates/*.html"]})
+setup()
