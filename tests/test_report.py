@@ -1,7 +1,7 @@
 from arche import Arche
 from arche import SH_URL
 from arche.report import Report
-from arche.rules.result import Level, Outcome
+from arche.rules.result import Level
 from conftest import create_result
 import pandas as pd
 import pytest

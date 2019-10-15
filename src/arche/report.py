@@ -1,7 +1,7 @@
 from typing import Dict
 
 from arche import SH_URL
-from arche.rules.result import Result, Outcome
+from arche.rules.result import Result
 from bleach import linkify, callbacks
 from IPython.display import display_html
 from jinja2 import Environment, PackageLoader, select_autoescape
