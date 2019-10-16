@@ -27,7 +27,7 @@ class Report:
 
     def __call__(self, rule: Result = None, keys_limit: int = None) -> None:
         if not rule:
-            template = self.env.get_template("template-full-report.html")
+            template = self.env.get_template("full-report.html")
             resultHTML = template.render(
                 rules=sorted(self.results.values(), key=lambda x: x.outcome.value),
                 pd=pd,
@@ -35,7 +35,7 @@ class Report:
                 keys_limit=keys_limit,
             )
         else:
-            template = self.env.get_template("template-single-rule.html")
+            template = self.env.get_template("single-rule.html")
             resultHTML = template.render(
                 rule=rule,
                 pd=pd,
@@ -44,7 +44,7 @@ class Report:
             )
         # this renders the report as an iframe
         # the option was added for generating the docs
-        template = self.env.get_template("iframe_template.html")
+        template = self.env.get_template("iframe.html")
         resultHTML = template.render(
             base64encode=base64.b64encode,
             data_str="data:text/html;base64,{}".format(
