@@ -186,7 +186,7 @@ class Result:
         from arche.report import Report
 
         IPython.display.clear_output()
-        Report()(self, None if not short else keys_limit)
+        Report()(self, keys_limit if short else None)
 
     @staticmethod
     def create_figures(stats: List[Stat], name: str) -> List[go.FigureWidget]:
