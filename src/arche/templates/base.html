@@ -152,7 +152,7 @@
           {% endfor %}
 	  {% if render_figure %}
               {% for figure in rule.figures %}
-                 {{ figure.to_html() | safe }}
+                 {{ figure.to_html(include_plotlyjs='cdn') | safe }}
               {% endfor %}
           {% endif %}
       </details>
