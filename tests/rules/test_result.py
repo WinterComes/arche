@@ -1,5 +1,5 @@
 from arche.rules.result import Level, Message, Result, Outcome
-from conftest import create_named_df, create_result
+from conftest import create_named_df, create_result, get_report_from_iframe
 import pandas as pd
 import pytest
 
@@ -78,8 +78,8 @@ def test_show(mocker, capsys, message, stats):
     mocked_display = mocker.patch("arche.report.display_html", autospec=True)
     res = create_result("test show", message, stats=stats)
     res.show()
-    generated_html = mocked_display.mock_calls[0][1][0]
-    assert generated_html.count("Plotly.newPlot") == 1
+    report_html = get_report_from_iframe(mocked_display.mock_calls[0][1][0])
+    assert report_html.count("Plotly.newPlot") == 1
 
 
 def test_outcome_equality():

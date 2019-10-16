@@ -2,7 +2,7 @@ from arche import Arche
 from arche import SH_URL
 from arche.report import Report
 from arche.rules.result import Level
-from conftest import create_result
+from conftest import create_result, get_report_from_iframe
 import pandas as pd
 import pytest
 
@@ -43,10 +43,10 @@ def test_report_call(mocker, get_df, capsys, messages, expected_details):
         r.save(result)
     r()
 
-    generated_html = mocked_display.mock_calls[0][1][0]
-    assert generated_html.count("Plotly.newPlot") == 2
-    assert generated_html.count("rule name here - SKIPPED") == 2
-    assert generated_html.count("other result there - SKIPPED") == 2
+    report_html = get_report_from_iframe(mocked_display.mock_calls[0][1][0])
+    assert report_html.count("Plotly.newPlot") == 2
+    assert report_html.count("rule name here - SKIPPED") == 2
+    assert report_html.count("other result there - SKIPPED") == 2
 
 
 def test_report_call_arguments(mocker):
@@ -56,8 +56,8 @@ def test_report_call_arguments(mocker):
     outcome = create_result("rule name here", message)
 
     Report()(outcome)
-    generated_html = mocked_display.mock_calls[0][1][0]
-    assert generated_html.count("very detailed message") == 1
+    report_html = get_report_from_iframe(mocked_display.mock_calls[0][1][0])
+    assert report_html.count("very detailed message") == 1
 
 
 def test_report_call_with_errors(mocker, get_job_items, get_schema):
@@ -67,11 +67,22 @@ def test_report_call_with_errors(mocker, get_job_items, get_schema):
     g = Arche("source", schema=schema)
     g._source_items = get_job_items
     g.report_all()
-    generated_html = mocked_display.mock_calls[0][1][0]
+    report_html = get_report_from_iframe(mocked_display.mock_calls[0][1][0])
     mocked_display.assert_called_once()
-    assert "JSON Schema Validation - FAILED" in mocked_display.mock_calls[0][1][0]
-    assert generated_html.count('href="{}"'.format(url)) == 1
-    assert generated_html.count("&#39;price&#39; is a required property") == 1
+    assert "JSON Schema Validation - FAILED" in report_html
+    assert report_html.count('href="{}"'.format(url)) == 1
+    assert report_html.count("&#39;price&#39; is a required property") == 1
+
+
+def test_report_iframe(mocker, get_job_items, get_schema):
+    mocked_display = mocker.patch("arche.report.display_html", autospec=True)
+    schema = {"type": "object", "required": ["price"], "properties": {"price": {}}}
+    g = Arche("source", schema=schema)
+    g._source_items = get_job_items
+    g.run_all_rules()
+    g.report()
+    mocked_display.assert_called_once()
+    assert "<iframe" in mocked_display.mock_calls[0][1][0]
 
 
 @pytest.mark.parametrize(

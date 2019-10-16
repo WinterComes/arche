@@ -1,4 +1,6 @@
+import base64
 from typing import Dict
+
 
 from arche import SH_URL
 from arche.rules.result import Result
@@ -40,7 +42,16 @@ class Report:
                 linkfy_callbacks=[callbacks.target_blank],
                 keys_limit=keys_limit,
             )
-        display_html(resultHTML, raw=True, metadata={"isolated": True})
+        # this renders the report as an iframe
+        # the option was added for generating the docs
+        template = self.env.get_template("iframe_template.html")
+        resultHTML = template.render(
+            base64encode=base64.b64encode,
+            data_str="data:text/html;base64,{}".format(
+                base64.b64encode(resultHTML.encode("utf-8")).decode("utf-8")
+            ),
+        )
+        display_html(resultHTML, raw=True)
 
     @staticmethod
     def sample_keys(keys: pd.Series, limit: int) -> str:

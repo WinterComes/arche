@@ -3,7 +3,7 @@ from typing import Dict, List
 from arche import arche, SH_URL
 from arche.arche import Arche
 from arche.rules.result import Level
-from conftest import create_result
+from conftest import create_result, get_report_from_iframe
 import pandas as pd
 import pytest
 
@@ -254,7 +254,8 @@ def test_validate_with_json_schema_fails(mocker, get_job_items, get_schema):
 
     assert len(a.report.results) == 1
     assert a.report.results.get("JSON Schema Validation") == res
-    assert "JSON Schema Validation - FAILED" in mocked_display.mock_calls[0][1][0]
+    report_html = get_report_from_iframe(mocked_display.mock_calls[0][1][0])
+    assert "JSON Schema Validation - FAILED" in report_html
 
 
 @pytest.mark.parametrize(

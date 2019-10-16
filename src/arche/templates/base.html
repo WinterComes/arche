@@ -113,9 +113,14 @@
           transition: all 0.35s;
           z-index: 3;
       }
+
+      .report-body {
+	  height: fit-content;
+      }
+      
     </style>
   </head>
-  <body>
+  <body class="report-body">
     <!-- Define macros to render the report -->
     {% macro to_clickable_urls(message) %}
        {{ message|linkify(callbacks=linkfy_callbacks)|safe }}
@@ -133,7 +138,7 @@
       <details open>
         <summary class="{{rule.outcome.name}}"> {{ rule.name }} - {{ rule.outcome.name }}</summary>
            {% for figure in rule.figures %}
-              {{ figure.to_html() | safe }}
+              {{ figure.to_html(include_plotlyjs='cdn') | safe }}
            {% endfor %}
        </details>
      {% endif %}
@@ -191,8 +196,8 @@
      {% endfor %}
          
   {% endmacro %}
-       <!-- Renders the page -->
-    {% block report %}
-    {% endblock %}
+   <!-- Renders the page -->
+   {% block report %}
+   {% endblock %}
   </body>
 </html>

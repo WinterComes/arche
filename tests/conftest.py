@@ -1,6 +1,9 @@
+import base64
 from copy import deepcopy
 from functools import partial
+import re
 from typing import Any, Dict, List, Optional, Tuple
+
 
 from arche.readers.items import CollectionItems, JobItems
 from arche.rules.result import Level, Result, Stat
@@ -268,3 +271,9 @@ def create_named_df(data: Dict, index: List[str], name: str) -> pd.DataFrame:
     df = pd.DataFrame(data, index=index)
     df.name = name
     return df
+
+
+def get_report_from_iframe(data):
+    return base64.b64decode(
+        re.search(";base64,([a-zA-Z0-9+/]+={0,2})", data).groups()[0]
+    ).decode("utf-8")
