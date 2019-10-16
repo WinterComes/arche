@@ -96,13 +96,11 @@ class Result:
     def outcome(self) -> Outcome:
         if not self.messages:
             return Outcome.PASSED
-        message_level = self.messages.keys()
-        if any([level.value == Level.ERROR.value for level in message_level]):
+        if Level.ERROR in self.messages.keys():
             return Outcome.FAILED
-        elif any([level.value == Level.WARNING.value for level in message_level]):
+        if Level.WARNING in self.messages.keys():
             return Outcome.WARNING
-        else:
-            return Outcome.SKIPPED
+        return Outcome.SKIPPED
 
     @property
     def errors(self):

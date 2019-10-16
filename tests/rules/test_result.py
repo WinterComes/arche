@@ -83,9 +83,5 @@ def test_show(mocker, capsys, message, stats):
 
 
 def test_outcome_equality():
-    outcomes = [Outcome.SKIPPED, Outcome.PASSED, Outcome.FAILED, Outcome.WARNING]
-
-    for outcome in outcomes:
-        assert outcome.__eq__(outcome)
-        for other in filter(lambda x: x != outcome, outcomes):
-            assert outcome.__ne__(other)
+    assert Outcome.SKIPPED == Outcome.SKIPPED
+    assert Outcome.WARNING != Outcome.PASSED
