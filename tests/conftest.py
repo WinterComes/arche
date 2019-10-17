@@ -274,4 +274,6 @@ def create_named_df(data: Dict, index: List[str], name: str) -> pd.DataFrame:
 
 
 def get_report_from_iframe(data):
-    return re.search("srcdoc=\"b'(<html>.*</html>)'", html.unescape(data)).groups()[0]
+    return re.search(
+        'srcdoc="(<html>.*</html>)"', html.unescape(data), re.DOTALL
+    ).groups()[0]
