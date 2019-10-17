@@ -1,4 +1,3 @@
-import base64
 from typing import Dict
 
 
@@ -45,12 +44,7 @@ class Report:
         # this renders the report as an iframe
         # the option was added for generating the docs
         template = self.env.get_template("iframe.html")
-        resultHTML = template.render(
-            base64encode=base64.b64encode,
-            data_str="data:text/html;base64,{}".format(
-                base64.b64encode(resultHTML.encode("utf-8")).decode("utf-8")
-            ),
-        )
+        resultHTML = template.render(html_str=resultHTML)
         display_html(resultHTML, raw=True)
 
     @staticmethod

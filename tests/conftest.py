@@ -1,6 +1,6 @@
-import base64
 from copy import deepcopy
 from functools import partial
+import html
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -274,6 +274,4 @@ def create_named_df(data: Dict, index: List[str], name: str) -> pd.DataFrame:
 
 
 def get_report_from_iframe(data):
-    return base64.b64decode(
-        re.search(";base64,([a-zA-Z0-9+/]+={0,2})", data).groups()[0]
-    ).decode("utf-8")
+    return re.search("srcdoc=\"b'(<html>.*</html>)'", html.unescape(data)).groups()[0]
